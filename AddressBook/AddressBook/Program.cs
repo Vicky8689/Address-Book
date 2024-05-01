@@ -10,9 +10,6 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
-
-
-
             while (true)
             {
 
@@ -29,31 +26,6 @@ namespace AddressBook
 
 
             }
-
-           
-
-
-
-
-
-
-
-            //foreach (User i in obj.usersList)
-            //{
-            //    if (search.Equals(i.name))
-            //    {
-            //        Console.WriteLine(" yes user avelable");
-            //        break;
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine(" user NOT avelable");
-
-            //    }
-            //}
-
-
-
 
         }
     }
