@@ -1,0 +1,18 @@
+﻿Name     :Vicky Yadav
+Contact  :9473364840
+Email    :vickyy8689@gmail.com
+City     :Mumbai
+State    :Maharastra
+ZipCode  :400043
+Name     :Ram Yadav
+Contact  :9372364844
+Email    :vicky6767@gmail.com
+City     :Mumbai
+State    :Maharstra
+ZipCode  :400067
+Name     :Rohit Shrama
+Contact  :9372364843
+Email    :Rohit89@gmail.com
+City     :Mumbai
+State    :Utterpredesh
+ZipCode  :400055

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,17 +10,15 @@ using System.Threading.Tasks;
 
 namespace AddressBook
 {
-    internal class Operations
+    abstract class methods
+    {
+        public abstract void Add();
+
+    }
+    internal class Operations: methods     //Inherit Abstract class methods
     {
        public static List<User> usersList = new List<User>();
-       private string contact;
-       private string firstName;
-       private string lastName;
-       private string name;
-       private string email;
-       private string city;
-       private string state;
-       private string zipCode;
+       private string contact,firstName,lastName,name,email,city,state,zipCode;
         //patterns
        public string namePattern = @"^[A-Z]{1}[A-Za-z]{2,}$";
        public string addPattern = @"^[\w]{4,}$";
@@ -27,11 +26,21 @@ namespace AddressBook
        public string contactPattern = @"^(0|\+91)?[789]\d{9}$";
        public string emailPattern = @"^[\w\.-]+@[\w]+\.[a-zA-Z]{2,}$";
 
-       
-        public void Add()
+        
+        public override void Add()
         {
+
             Console.Write("Enter your number :");
             contact = Console.ReadLine();
+            //checking user is present or not
+            foreach(User i in usersList)
+            {
+                if (i.contact.Equals(contact))
+                {
+                    Console.WriteLine("User already exite please try again..");
+                    return; 
+                }
+            }
 
             Console.Write("Enter your firstname :");
             firstName = Console.ReadLine();
@@ -53,14 +62,11 @@ namespace AddressBook
             Console.Write("Enter your Zip Code:");
             zipCode = Console.ReadLine();
 
-
             //checking validation
             if(!validattion()) { return; }
-            
-            
 
             User user =new User();
-            //add user datils 
+            //add user datils by get
             user.contact = contact;
             user.name = name;
             user.email = email;
@@ -68,13 +74,21 @@ namespace AddressBook
             user.zipCode = zipCode;
             user.state = state;
             //add user in list
-            usersList.Add(user); 
+
+            usersList.Add(user);
+            Bookdata.AddDataTotxt(usersList);
         }
         
         //show user datiles 
-        public void ShowDatils()
+        public static void showDatils()
         {
-            foreach(User i in  usersList) 
+            if(usersList.Count()==0) 
+            {
+                Console.WriteLine("Empty AddressBook");
+                return;
+            }
+            Console.WriteLine("---------------------ALL CONTACTS---------------------------------");
+            foreach (User i in  usersList) 
             {
                 Console.WriteLine("Name        :" + i.name);
                 Console.WriteLine("Contact No. :" + i.contact);
@@ -82,6 +96,7 @@ namespace AddressBook
                 Console.WriteLine("City        :" + i.city);
                 Console.WriteLine("state       :" + i.state);
                 Console.WriteLine("ZipCode     :" + i.zipCode);
+                Console.WriteLine("------------------------------------------------------------------");
             }
         }
 
@@ -127,7 +142,82 @@ namespace AddressBook
             }
             return validatReturn;
         }
+        //find user by full name 
+       // public static void searchUser(string enteredName)
+        public static bool showDatils(string enteredName)
+        {
 
+            //foreach (User i in usersList)
+            //{
+
+            //    //if (i.name.Equals(enteredName))
+            //    //{
+
+
+
+            //    //    //Console.WriteLine("Name        :" + i.name);
+            //    //    //Console.WriteLine("Contact No. :" + i.contact);
+            //    //    //Console.WriteLine("Email       :" + i.email);
+            //    //    //Console.WriteLine("City        :" + i.city);
+            //    //    //Console.WriteLine("state       :" + i.state);
+            //    //    //Console.WriteLine("ZipCode     :" + i.zipCode);
+            //    //    return true;
+
+            //    //}
+            //}
+            string searchPattern = $"Name     :{enteredName}";
+            
+            using (FileStream sf = new FileStream(@"D:\My_Address_Book\AddressBookData.txt", FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader sr = new StreamReader(sf))
+                {
+                    
+                        if (sr.ReadLine().Equals(searchPattern))
+                        {
+                        
+                        for(int i = 1; i < 6; i++)
+                        {
+                            Console.WriteLine(sr.ReadLine());
+                        }
+                        return true;
+                    }
+                }
+
+            }
+            Console.WriteLine("User Not found.."); 
+            return false;
+        } 
+        //edite user datils
+        public static void editDatils(string name)
+        {
+            foreach (User i in usersList)
+            {
+                if (i.name==name)
+                {
+                    try
+                    {
+                        Console.WriteLine("Enter Name  :");
+                        i.name = Console.ReadLine();
+                        Console.WriteLine("Enter Contact No.:");
+                        i.contact = Console.ReadLine();
+                        Console.WriteLine("Enter Email  :");
+                        i.email = Console.ReadLine();
+                        Console.WriteLine("Enter City  :");
+                        i.city = Console.ReadLine();
+                        Console.WriteLine("Enter state  :");
+                        i.state = Console.ReadLine();
+                        Console.WriteLine("Enter ZipCode  :");
+                        i.zipCode = Console.ReadLine();
+
+
+                    }
+                    catch(Exception e) { Console.WriteLine(e.Message); }
+                    break;
+
+                }
+            }
+
+        }
        
     }
 }
