@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "D:\\My_Address_Book\\AddressBook\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|D:\\My_Address_Book\\AddressBook\\addressbook\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|solutionrelative:addressbook\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|D:\\My_Address_Book\\AddressBook\\addressbook\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|solutionrelative:addressbook\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|D:\\My_Address_Book\\AddressBook\\addressbook\\operations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|d:\\my_address_book\\addressbook\\addressbook\\operations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|solutionrelative:addressbook\\operations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|d:\\my_address_book\\addressbook\\addressbook\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|solutionrelative:addressbook\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|D:\\My_Address_Book\\AddressBook\\addressbook\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B7D1B30A-88F7-4B36-B9BE-0BD3071C33BF}|AddressBook\\AddressBook.csproj|solutionrelative:addressbook\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,20 +22,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\My_Address_Book\\AddressBook\\AddressBook\\User.cs",
               "RelativeDocumentMoniker": "AddressBook\\User.cs",
               "ToolTip": "D:\\My_Address_Book\\AddressBook\\AddressBook\\User.cs",
               "RelativeToolTip": "AddressBook\\User.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAIAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-30T11:15:33.516Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-30T11:15:33.516Z"
             },
             {
               "$type": "Document",
@@ -45,20 +44,20 @@
               "RelativeDocumentMoniker": "AddressBook\\Operations.cs",
               "ToolTip": "D:\\My_Address_Book\\AddressBook\\AddressBook\\Operations.cs",
               "RelativeToolTip": "AddressBook\\Operations.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAADUAAAARAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAADwv14AAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T11:16:08.607Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\My_Address_Book\\AddressBook\\AddressBook\\Program.cs",
               "RelativeDocumentMoniker": "AddressBook\\Program.cs",
               "ToolTip": "D:\\My_Address_Book\\AddressBook\\AddressBook\\Program.cs",
               "RelativeToolTip": "AddressBook\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAFAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwB8AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T11:11:57.481Z",
               "EditorCaption": ""
