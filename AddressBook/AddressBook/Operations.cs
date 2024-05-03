@@ -18,7 +18,7 @@ namespace AddressBook
     internal class Operations: methods     //Inherit Abstract class methods
     {
        public static List<User> usersList = new List<User>();
-       private string contact,firstName,lastName,name,email,city,state,zipCode;
+      private string firstName,lastName;
         //patterns
        public string namePattern = @"^[A-Z]{1}[A-Za-z]{2,}$";
        public string addPattern = @"^[\w]{4,}$";
@@ -30,49 +30,40 @@ namespace AddressBook
         public override void Add()
         {
 
+            User user = new User();
             Console.Write("Enter your number :");
-            contact = Console.ReadLine();
+            user.contact = Console.ReadLine();
             //checking user is present or not
             foreach(User i in usersList)
             {
-                if (i.contact.Equals(contact))
+                if (i.contact.Equals(user.contact))
                 {
                     Console.WriteLine("User already exite please try again..");
                     return; 
                 }
             }
-
             Console.Write("Enter your firstname :");
             firstName = Console.ReadLine();
 
             Console.Write("Enter your lastname :");
             lastName = Console.ReadLine();
 
-            name = firstName + " " + lastName;
+            user.name = firstName + " " + lastName;
 
             Console.Write("Enter your email :");
-            email = Console.ReadLine();
+            user.email = Console.ReadLine();
 
             Console.Write("Enter your city :");
-            city = Console.ReadLine();
+            user.city = Console.ReadLine();
 
             Console.Write("Enter your state :");
-            state = Console.ReadLine();
+            user.state = Console.ReadLine();
 
             Console.Write("Enter your Zip Code:");
-            zipCode = Console.ReadLine();
+            user.zipCode = Console.ReadLine();
 
             //checking validation
-            if(!validattion()) { return; }
-
-            User user =new User();
-            //add user datils by get
-            user.contact = contact;
-            user.name = name;
-            user.email = email;
-            user.city = city;
-            user.zipCode = zipCode;
-            user.state = state;
+            if(!validattion(user)) { return; }
             //add user in list
 
             usersList.Add(user);
@@ -82,30 +73,42 @@ namespace AddressBook
         //show user datiles 
         public static void showDatils()
         {
-            if(usersList.Count()==0) 
+            using (FileStream sf = new FileStream(@"D:\My_Address_Book\AddressBookData.txt", FileMode.Open, FileAccess.Read))
             {
-                Console.WriteLine("Empty AddressBook");
-                return;
+                using (StreamReader sr = new StreamReader(sf))
+                {
+                    string line = "";
+                    while ((line = sr.ReadLine()) != null)  //reade line and store in line variable if line is not null the retun TRUE
+                    {                     
+                            Console.WriteLine(line);    
+                    }
+                }
             }
-            Console.WriteLine("---------------------ALL CONTACTS---------------------------------");
-            foreach (User i in  usersList) 
-            {
-                Console.WriteLine("Name        :" + i.name);
-                Console.WriteLine("Contact No. :" + i.contact);
-                Console.WriteLine("Email       :" + i.email);
-                Console.WriteLine("City        :" + i.city);
-                Console.WriteLine("state       :" + i.state);
-                Console.WriteLine("ZipCode     :" + i.zipCode);
-                Console.WriteLine("------------------------------------------------------------------");
-            }
+
+            //if (usersList.Count()==0) 
+            //{
+            //    Console.WriteLine("Empty AddressBook");
+            //    return;
+            //}
+            //Console.WriteLine("---------------------ALL CONTACTS---------------------------------");
+            //foreach (User i in  usersList) 
+            //{
+            //    Console.WriteLine("Name        :" + i.name);
+            //    Console.WriteLine("Contact No. :" + i.contact);
+            //    Console.WriteLine("Email       :" + i.email);
+            //    Console.WriteLine("City        :" + i.city);
+            //    Console.WriteLine("state       :" + i.state);
+            //    Console.WriteLine("ZipCode     :" + i.zipCode);
+            //    Console.WriteLine("------------------------------------------------------------------");
+            //}
         }
 
-        //validation
-        public bool validattion()
+        //validation    --Completed
+        public bool validattion(User user)
         {
             bool validatReturn = true;
 
-            if (!Regex.IsMatch(contact, contactPattern))
+            if (!Regex.IsMatch(user.contact, contactPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :contact No. ");
                 validatReturn = false;
@@ -120,73 +123,56 @@ namespace AddressBook
                 Console.WriteLine("Pleas Enter Correct :lastName ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(email, emailPattern))
+            if (!Regex.IsMatch(user.email, emailPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :email ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(city, addPattern))
+            if (!Regex.IsMatch(user.city, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :city ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(state, addPattern))
+            if (!Regex.IsMatch(user.state, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :state ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(zipCode, addPattern))
+            if (!Regex.IsMatch(user.zipCode, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :zipCode ");
                 validatReturn = false;
             }
             return validatReturn;
         }
-        //find user by full name 
-       // public static void searchUser(string enteredName)
+
+        //find user by full name --Completed
         public static bool showDatils(string enteredName)
         {
-
-            //foreach (User i in usersList)
-            //{
-
-            //    //if (i.name.Equals(enteredName))
-            //    //{
-
-
-
-            //    //    //Console.WriteLine("Name        :" + i.name);
-            //    //    //Console.WriteLine("Contact No. :" + i.contact);
-            //    //    //Console.WriteLine("Email       :" + i.email);
-            //    //    //Console.WriteLine("City        :" + i.city);
-            //    //    //Console.WriteLine("state       :" + i.state);
-            //    //    //Console.WriteLine("ZipCode     :" + i.zipCode);
-            //    //    return true;
-
-            //    //}
-            //}
             string searchPattern = $"Name     :{enteredName}";
-            
             using (FileStream sf = new FileStream(@"D:\My_Address_Book\AddressBookData.txt", FileMode.Open, FileAccess.Read))
             {
                 using (StreamReader sr = new StreamReader(sf))
-                {
-                    
-                        if (sr.ReadLine().Equals(searchPattern))
+                {   
+                    string line = "";
+                    while (( line = sr.ReadLine()) != null)  //reade line and store in line variable if line is not null the retun TRUE
+                    {
+                        if (line.Equals(searchPattern))
                         {
-                        
-                        for(int i = 1; i < 6; i++)
-                        {
-                            Console.WriteLine(sr.ReadLine());
+                            Console.WriteLine(line);
+                            for (int i = 1; i < 6; i++)
+                            {
+                                Console.WriteLine(sr.ReadLine());
+                            }
+                            return true;
                         }
-                        return true;
                     }
                 }
-
             }
             Console.WriteLine("User Not found.."); 
             return false;
         } 
+
         //edite user datils
         public static void editDatils(string name)
         {

@@ -20,12 +20,14 @@ namespace AddressBook
 
                     foreach (User i in list)
                     {
+                        Console.WriteLine("***********************************");
                         writer.WriteLine("Name     :"+i.name);
                         writer.WriteLine("Contact  :"+i.contact);
                         writer.WriteLine("Email    :"+i.email);
                         writer.WriteLine("City     :"+i.city);
                         writer.WriteLine("State    :"+i.state);
                         writer.WriteLine("ZipCode  :"+i.zipCode);
+                        Console.WriteLine("***********************************");
                     }
 
                     
