@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,13 +9,14 @@ namespace AddressBook
 {
     internal class User
     {
-        public string contact { get; set; }
-        public string name { get; set; }
+        public string Contact { get; set; }
+        
+        public string Name { get; set; }
        
-        public string email { get; set; }
-        public string city { get; set; }
-        public string state { get; set; }
-        public string zipCode { get; set; }
+        public string Email { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
 
         
     }

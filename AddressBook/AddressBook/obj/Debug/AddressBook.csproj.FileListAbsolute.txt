@@ -5,3 +5,7 @@ D:\My_Address_Book\AddressBook\AddressBook\obj\Debug\AddressBook.csproj.Assembly
 D:\My_Address_Book\AddressBook\AddressBook\obj\Debug\AddressBook.csproj.CoreCompileInputs.cache
 D:\My_Address_Book\AddressBook\AddressBook\obj\Debug\AddressBook.exe
 D:\My_Address_Book\AddressBook\AddressBook\obj\Debug\AddressBook.pdb
+D:\My_Address_Book\AddressBook\AddressBook\bin\Debug\Newtonsoft.Json.dll
+D:\My_Address_Book\AddressBook\AddressBook\bin\Debug\Newtonsoft.Json.xml
+D:\My_Address_Book\AddressBook\AddressBook\obj\Debug\AddressB.06280804.Up2Date
+D:\My_Address_Book\AddressBook\AddressBook\bin\Debug\System.ComponentModel.Annotations.dll

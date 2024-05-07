@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,9 +8,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AddressBook
 {
+    
     abstract class methods
     {
         public abstract void Add();
@@ -17,90 +20,89 @@ namespace AddressBook
     }
     internal class Operations: methods     //Inherit Abstract class methods
     {
-       public static List<User> usersList = new List<User>();
+      // public static List<User> usersList = new List<User>();
       private string firstName,lastName;
         //patterns
        public string namePattern = @"^[A-Z]{1}[A-Za-z]{2,}$";
-       public string addPattern = @"^[\w]{4,}$";
-       public string zipCodePattern = @"^[0-9]{6}$";
-       public string contactPattern = @"^(0|\+91)?[789]\d{9}$";
-       public string emailPattern = @"^[\w\.-]+@[\w]+\.[a-zA-Z]{2,}$";
+       //public string addPattern = @"^[\w]{4,}$";
+       //public string zipCodePattern = @"^[0-9]{6}$";
+       //public string contactPattern = @"^(0|\+91)?[789]\d{9}$";
+       //public string emailPattern = @"^[\w\.-]+@[\w]+\.[a-zA-Z]{2,}$";
+       // public string namePattern = @"^[\w]{4,}$";
+        public string addPattern = @"^[\w]{4,}$";
+        public string zipCodePattern = @"^[\w]{4,}$";
+        public string contactPattern = @"^[\w]{4,}$";
+        public string emailPattern = @"^[\w]{4,}$";
 
-        
+
         public override void Add()
         {
 
             User user = new User();
             Console.Write("Enter your number :");
-            user.contact = Console.ReadLine();
+            user.Contact = Console.ReadLine();
+
             //checking user is present or not
-            foreach(User i in usersList)
+            string path = @"D:\My_Address_Book\AddressBookData.json";
+            string json = File.ReadAllText(path);
+            json = "[" + json + "]";
+            var usersFile = JsonConvert.DeserializeObject<List<User>>(json);
+          
+            foreach (var i in usersFile)
             {
-                if (i.contact.Equals(user.contact))
-                {
-                    Console.WriteLine("User already exite please try again..");
-                    return; 
-                }
-            }
+                if (i.Contact.Equals(user.Contact)) {
+                    Console.WriteLine("User already exists");
+                    return; }                
+            }       
             Console.Write("Enter your firstname :");
             firstName = Console.ReadLine();
 
             Console.Write("Enter your lastname :");
             lastName = Console.ReadLine();
 
-            user.name = firstName + " " + lastName;
+            user.Name = firstName + " " + lastName;
 
             Console.Write("Enter your email :");
-            user.email = Console.ReadLine();
+            user.Email = Console.ReadLine();
 
             Console.Write("Enter your city :");
-            user.city = Console.ReadLine();
+            user.City = Console.ReadLine();
 
             Console.Write("Enter your state :");
-            user.state = Console.ReadLine();
+            user.State = Console.ReadLine();
 
             Console.Write("Enter your Zip Code:");
-            user.zipCode = Console.ReadLine();
+            user.ZipCode = Console.ReadLine();
 
             //checking validation
             if(!validattion(user)) { return; }
             //add user in list
 
-            usersList.Add(user);
-            Bookdata.AddDataTotxt(usersList);
+          
+            
+            Bookdata.AddData(user);
         }
         
-        //show user datiles 
+        //show user datiles  --complited
         public static void showDatils()
         {
-            using (FileStream sf = new FileStream(@"D:\My_Address_Book\AddressBookData.txt", FileMode.Open, FileAccess.Read))
-            {
-                using (StreamReader sr = new StreamReader(sf))
-                {
-                    string line = "";
-                    while ((line = sr.ReadLine()) != null)  //reade line and store in line variable if line is not null the retun TRUE
-                    {                     
-                            Console.WriteLine(line);    
-                    }
-                }
-            }
+            string path = @"D:\My_Address_Book\AddressBookData.json";
+            string json = File.ReadAllText(path);
+            json = "[" + json + "]";
+            var users = JsonConvert.DeserializeObject<List<User>>(json);
+           // Console.WriteLine(users);
 
-            //if (usersList.Count()==0) 
-            //{
-            //    Console.WriteLine("Empty AddressBook");
-            //    return;
-            //}
-            //Console.WriteLine("---------------------ALL CONTACTS---------------------------------");
-            //foreach (User i in  usersList) 
-            //{
-            //    Console.WriteLine("Name        :" + i.name);
-            //    Console.WriteLine("Contact No. :" + i.contact);
-            //    Console.WriteLine("Email       :" + i.email);
-            //    Console.WriteLine("City        :" + i.city);
-            //    Console.WriteLine("state       :" + i.state);
-            //    Console.WriteLine("ZipCode     :" + i.zipCode);
-            //    Console.WriteLine("------------------------------------------------------------------");
-            //}
+            foreach (var user in users)
+            {
+                Console.WriteLine("Name    :" + user.Name);
+                Console.WriteLine("Contact :" + user.Contact);
+                Console.WriteLine("Email   :" + user.Email);
+                Console.WriteLine("City    :" + user.City);
+                Console.WriteLine("State   :" + user.State);
+                Console.WriteLine("Zipcode :" + user.ZipCode);
+                Console.WriteLine();
+
+            }
         }
 
         //validation    --Completed
@@ -108,7 +110,7 @@ namespace AddressBook
         {
             bool validatReturn = true;
 
-            if (!Regex.IsMatch(user.contact, contactPattern))
+            if (!Regex.IsMatch(user.Contact, contactPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :contact No. ");
                 validatReturn = false;
@@ -123,22 +125,22 @@ namespace AddressBook
                 Console.WriteLine("Pleas Enter Correct :lastName ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(user.email, emailPattern))
+            if (!Regex.IsMatch(user.Email, emailPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :email ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(user.city, addPattern))
+            if (!Regex.IsMatch(user.City, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :city ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(user.state, addPattern))
+            if (!Regex.IsMatch(user.State, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :state ");
                 validatReturn = false;
             }
-            if (!Regex.IsMatch(user.zipCode, addPattern))
+            if (!Regex.IsMatch(user.ZipCode, addPattern))
             {
                 Console.WriteLine("Pleas Enter Correct :zipCode ");
                 validatReturn = false;
@@ -149,60 +151,67 @@ namespace AddressBook
         //find user by full name --Completed
         public static bool showDatils(string enteredName)
         {
-            string searchPattern = $"Name     :{enteredName}";
-            using (FileStream sf = new FileStream(@"D:\My_Address_Book\AddressBookData.txt", FileMode.Open, FileAccess.Read))
+
+
+            string path = @"D:\My_Address_Book\AddressBookData.json";
+            string json = File.ReadAllText(path);
+            json = "[" + json + "]";
+            var users = JsonConvert.DeserializeObject<List<User>>(json);
+            // Console.WriteLine(users);
+
+            foreach (var user in users)
             {
-                using (StreamReader sr = new StreamReader(sf))
-                {   
-                    string line = "";
-                    while (( line = sr.ReadLine()) != null)  //reade line and store in line variable if line is not null the retun TRUE
-                    {
-                        if (line.Equals(searchPattern))
-                        {
-                            Console.WriteLine(line);
-                            for (int i = 1; i < 6; i++)
-                            {
-                                Console.WriteLine(sr.ReadLine());
-                            }
-                            return true;
-                        }
-                    }
+
+                if (user.Name == enteredName)
+                {
+
+
+                    Console.WriteLine("Name    :"+user.Name);
+                    Console.WriteLine("Contact :"+user.Contact);
+                    Console.WriteLine("Email   :"+user.Email);
+                    Console.WriteLine("City    :"+user.City);
+                    Console.WriteLine("State   :"+user.State);
+                    Console.WriteLine("Zipcode :"+user.ZipCode);
+                    Console.WriteLine();
+                    return true;
                 }
+
             }
-            Console.WriteLine("User Not found.."); 
-            return false;
+                return false;
         } 
 
         //edite user datils
         public static void editDatils(string name)
         {
-            foreach (User i in usersList)
+            string path = @"D:\My_Address_Book\AddressBookData.json";
+            string json = File.ReadAllText(path);
+            json = "[" + json + "]";
+
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
+            foreach (User user in users)
             {
-                if (i.name==name)
-                {
-                    try
-                    {
-                        Console.WriteLine("Enter Name  :");
-                        i.name = Console.ReadLine();
-                        Console.WriteLine("Enter Contact No.:");
-                        i.contact = Console.ReadLine();
-                        Console.WriteLine("Enter Email  :");
-                        i.email = Console.ReadLine();
-                        Console.WriteLine("Enter City  :");
-                        i.city = Console.ReadLine();
-                        Console.WriteLine("Enter state  :");
-                        i.state = Console.ReadLine();
-                        Console.WriteLine("Enter ZipCode  :");
-                        i.zipCode = Console.ReadLine();
-
-
-                    }
-                    catch(Exception e) { Console.WriteLine(e.Message); }
-                    break;
-
+                if (user.Name == name)
+                {                  
+                    Console.WriteLine("Enter Name  :");
+                    user.Name= Console.ReadLine();
+                    Console.WriteLine("Enter Contact No.:");
+                    user.Contact = Console.ReadLine();
+                    Console.WriteLine("Enter Email  :");
+                    user.Email = Console.ReadLine();
+                    Console.WriteLine("Enter City  :");
+                    user.City = Console.ReadLine();
+                    Console.WriteLine("Enter state  :");
+                    user.State = Console.ReadLine();
+                    Console.WriteLine("Enter ZipCode  :");
+                    user.ZipCode = Console.ReadLine();                  
+                    Console.WriteLine();                   
                 }
             }
-
+            string updatedJson = JsonConvert.SerializeObject(users, Formatting.Indented);
+            
+            string letest = updatedJson.Substring(1, updatedJson.Length - 2);
+            File.WriteAllText(path, letest);
+            Console.WriteLine("file update ");
         }
        
     }
