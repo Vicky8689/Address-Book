@@ -1,15 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+﻿using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 namespace AddressBook
 {
     
@@ -20,21 +13,22 @@ namespace AddressBook
     }
     internal class Operations: methods     //Inherit Abstract class methods
     {
-      // public static List<User> usersList = new List<User>();
+     
       private string firstName,lastName;
-        //patterns
-       public string namePattern = @"^[A-Z]{1}[A-Za-z]{2,}$";
+    
+        public static string cs = ConfigurationManager.ConnectionStrings["abcs"].ConnectionString;
+      // public string namePattern = @"^[A-Z]{1}[A-Za-z]{2,}$";
        //public string addPattern = @"^[\w]{4,}$";
        //public string zipCodePattern = @"^[0-9]{6}$";
        //public string contactPattern = @"^(0|\+91)?[789]\d{9}$";
        //public string emailPattern = @"^[\w\.-]+@[\w]+\.[a-zA-Z]{2,}$";
-       // public string namePattern = @"^[\w]{4,}$";
+       public string namePattern = @"^[\w]{4,}$";
         public string addPattern = @"^[\w]{4,}$";
         public string zipCodePattern = @"^[\w]{4,}$";
         public string contactPattern = @"^[\w]{4,}$";
         public string emailPattern = @"^[\w]{4,}$";
-
-
+        
+        //---------------------add by ado is completed
         public override void Add()
         {
 
@@ -42,18 +36,19 @@ namespace AddressBook
             Console.Write("Enter your number :");
             user.Contact = Console.ReadLine();
 
-            //checking user is present or not
-            string path = @"D:\My_Address_Book\AddressBookData.json";
-            string json = File.ReadAllText(path);
-            json = "[" + json + "]";
-            var usersFile = JsonConvert.DeserializeObject<List<User>>(json);
-          
-            foreach (var i in usersFile)
+            //checking user is present or not 
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                if (i.Contact.Equals(user.Contact)) {
-                    Console.WriteLine("User already exists");
-                    return; }                
-            }       
+                string qurey_find= $"select count(*) from AddressBookT where contact = '{user.Contact}'";
+                SqlCommand cmd = new SqlCommand(qurey_find, conn);
+                conn.Open();
+               var a  = (int)cmd.ExecuteScalar();            
+                if (a>0)
+                {
+                    Console.WriteLine("user already present ples try again....");
+                    return;
+                }               
+            }
             Console.Write("Enter your firstname :");
             firstName = Console.ReadLine();
 
@@ -75,37 +70,59 @@ namespace AddressBook
             user.ZipCode = Console.ReadLine();
 
             //checking validation
-            if(!validattion(user)) { return; }
-            //add user in list
+            if (!validattion(user)) { return; }
 
-          
-            
-            Bookdata.AddData(user);
-        }
-        
-        //show user datiles  --complited
-        public static void showDatils()
-        {
-            string path = @"D:\My_Address_Book\AddressBookData.json";
-            string json = File.ReadAllText(path);
-            json = "[" + json + "]";
-            var users = JsonConvert.DeserializeObject<List<User>>(json);
-           // Console.WriteLine(users);
 
-            foreach (var user in users)
+            //adding data
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                Console.WriteLine("Name    :" + user.Name);
-                Console.WriteLine("Contact :" + user.Contact);
-                Console.WriteLine("Email   :" + user.Email);
-                Console.WriteLine("City    :" + user.City);
-                Console.WriteLine("State   :" + user.State);
-                Console.WriteLine("Zipcode :" + user.ZipCode);
-                Console.WriteLine();
+                string qurey_Add = $"insert into AddressBookT values ('{user.Name}','{user.Contact}','{user.Email}','{user.City}','{user.State}','{user.ZipCode}')";
+                SqlDataAdapter adapter = new SqlDataAdapter(qurey_Add, conn);
+
+                //create data table 
+                DataTable add_book_table = new DataTable();
+                //create data set
+                DataSet ds = new DataSet();
+
+                ds.Tables.Add(add_book_table);
+                adapter.Fill(ds);
+                adapter.Update(add_book_table);
 
             }
+         
+        }
+        
+        //---------------------show user datiles(table)  completed
+        public static void showDatils()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(cs))
+                {
+                    string qurey_datils = "select * from AddressBookT";
+                    SqlCommand cmd = new SqlCommand(qurey_datils, conn);
+                    conn.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("name= " + dr["name"] );
+                        Console.WriteLine("contact= "+ dr["contact"]);
+                        Console.WriteLine("Email= " + dr["email"]);
+                        Console.WriteLine("city= "+ dr["city"]);
+                        Console.WriteLine("state= " + dr["state"]);
+                        Console.WriteLine("zipcode= " + dr["zipcode"]);
+                        Console.WriteLine();                          
+                    }
+
+
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
         }
 
-        //validation    --Completed
+        //------------------------validation    Completed
         public bool validattion(User user)
         {
             bool validatReturn = true;
@@ -148,72 +165,95 @@ namespace AddressBook
             return validatReturn;
         }
 
-        //find user by full name --Completed
-        public static bool showDatils(string enteredName)
+        //-----------------------find user by full name Completed
+        public static bool showDatils(string Contact)
         {
-
-
-            string path = @"D:\My_Address_Book\AddressBookData.json";
-            string json = File.ReadAllText(path);
-            json = "[" + json + "]";
-            var users = JsonConvert.DeserializeObject<List<User>>(json);
-            // Console.WriteLine(users);
-
-            foreach (var user in users)
+            try
             {
-
-                if (user.Name == enteredName)
+                using (SqlConnection conn = new SqlConnection(cs))
                 {
+                    string qurey_datils_by = $"select * from AddressBookT where contact = '{Contact}'";
+                    SqlCommand cmd = new SqlCommand(qurey_datils_by, conn);
+                    conn.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("name= " + dr["name"]);
+                        Console.WriteLine("contact= " + dr["contact"]);
+                        Console.WriteLine("Email= " + dr["email"]);
+                        Console.WriteLine("city= " + dr["city"]);
+                        Console.WriteLine("state= " + dr["state"]);
+                        Console.WriteLine("zipcode= " + dr["zipcode"]);
+                        Console.WriteLine();
+                        return true;
+                        
+                    }
 
 
-                    Console.WriteLine("Name    :"+user.Name);
-                    Console.WriteLine("Contact :"+user.Contact);
-                    Console.WriteLine("Email   :"+user.Email);
-                    Console.WriteLine("City    :"+user.City);
-                    Console.WriteLine("State   :"+user.State);
-                    Console.WriteLine("Zipcode :"+user.ZipCode);
-                    Console.WriteLine();
-                    return true;
+
                 }
-
             }
-                return false;
-        } 
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            return false;
 
-        //edite user datils
-        public static void editDatils(string name)
+        }
+
+        //--------------------edite user datils by contact completed
+        public static void editDatils(string Contact)
         {
-            string path = @"D:\My_Address_Book\AddressBookData.json";
-            string json = File.ReadAllText(path);
-            json = "[" + json + "]";
-
-            List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
-            foreach (User user in users)
+            User user = new User();
+            Console.WriteLine("Enter Name  :");
+            user.Name = Console.ReadLine();
+           
+            Console.WriteLine("Enter Email  :");
+            user.Email = Console.ReadLine();
+            Console.WriteLine("Enter City  :");
+            user.City = Console.ReadLine();
+            Console.WriteLine("Enter state  :");
+            user.State = Console.ReadLine();
+            Console.WriteLine("Enter ZipCode  :");
+            user.ZipCode = Console.ReadLine();
+            Console.WriteLine();
+            try
             {
-                if (user.Name == name)
-                {                  
-                    Console.WriteLine("Enter Name  :");
-                    user.Name= Console.ReadLine();
-                    Console.WriteLine("Enter Contact No.:");
-                    user.Contact = Console.ReadLine();
-                    Console.WriteLine("Enter Email  :");
-                    user.Email = Console.ReadLine();
-                    Console.WriteLine("Enter City  :");
-                    user.City = Console.ReadLine();
-                    Console.WriteLine("Enter state  :");
-                    user.State = Console.ReadLine();
-                    Console.WriteLine("Enter ZipCode  :");
-                    user.ZipCode = Console.ReadLine();                  
-                    Console.WriteLine();                   
+                using (SqlConnection conn = new SqlConnection(cs))
+                {
+                    string qurey_datils = $"update AddressBookT set name='{user.Name}' ,email = '{user.Email}',city = '{user.City}',state = '{user.State}',zipcode = '{user.ZipCode}' where contact = '{Contact}'";
+                    SqlCommand cmd = new SqlCommand(qurey_datils, conn);
+                    conn.Open();
+                    int a = cmd.ExecuteNonQuery();
                 }
             }
-            string updatedJson = JsonConvert.SerializeObject(users, Formatting.Indented);
-            
-            string letest = updatedJson.Substring(1, updatedJson.Length - 2);
-            File.WriteAllText(path, letest);
-            Console.WriteLine("file update ");
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+                           
+            }
+           
+
+        //----------------------delet data by contact completed
+        public static void deleteData(string in_contact) 
+        {
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                string qurey_Add = $"delete from AddressBookT where contact = '{in_contact}' ";
+                SqlDataAdapter adapter = new SqlDataAdapter(qurey_Add, conn);
+
+                //create data table 
+                DataTable add_book_table = new DataTable();
+                //create data set
+                DataSet ds = new DataSet();
+
+                ds.Tables.Add(add_book_table);
+                adapter.Fill(ds);
+                adapter.Update(add_book_table);
+
+            }
+
+        }
+
+
         }
        
     }
-}
+
 
